@@ -5,6 +5,7 @@ import { useCreateUser } from "../../hooks/useCreateUser";
 import { useState } from "react";
 import { extractErrorMessage } from "../../utils/errors";
 import { useLogin } from "../../hooks/useLogin";
+import { UNKNOWN_ERROR_MESSAGE } from "../../constants/errors";
 
 const Signup = () => {
   const [createUser] = useCreateUser();
@@ -17,7 +18,7 @@ const Signup = () => {
       error={error}
       onSubmit={async ({ email, password }) => {
         try {
-          await createUser({
+          const user = await createUser({
             variables: {
               createUserInput: {
                 email,
@@ -25,6 +26,7 @@ const Signup = () => {
               },
             },
           });
+
           await login({ email, password });
           setError("");
         } catch (error) {
@@ -34,7 +36,7 @@ const Signup = () => {
             return;
           }
           console.log(error);
-          setError("Unknown error occurred.");
+          setError(UNKNOWN_ERROR_MESSAGE);
         }
       }}
     >
